@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        
+        <h1>Calcular dia de la semana</h1>
+
+        <label>Día: </label>
+        <input type="text" id="dia"><br/>
+        <label>Mes: </label>
+        <input type="text" id="mes"><br/>
+        <label>Año: </label>
+        <input type="text" id="anio"><br/>
+        <button id="botonresultado">Mostrar dia de la semana</button>
+        <h2 id="resultado"></h2>
+
+
+        <script src="js/jquery-3.7.1.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#botonresultado").click(function(){
+                    var dia = parseInt($("#dia").val());
+                    var mes = parseInt($("#mes").val());
+                    var anio = parseInt($("#anio").val());
+                    
+                    //Multiplicar el Mes más 1 por 3 y dividirlo entre 5 
+                    var op1 =  Math.trunc(((mes + 1) * 3) / 5);
+                    //Dividir el año entre 4 
+                    var op2 = Math.trunc(anio / 4);
+                    //Dividir el año entre 100
+                    var op3 = Math.trunc(anio / 100);
+                    //Dividir el año entre 400 
+                    var op4 = Math.trunc(anio / 400);
+                    //Sumar el dia, el doble del mes, el año, el resultado de la operación 1 
+                    // , el resultado de la operación 2 
+                    // , menos el resultado de la operación 3 más la operación 4 más 2. 
+                    var op5 = Math.trunc(dia + (mes * 2) + anio + op1 + op2 - op3 + op4 + 2)
+                    //Dividir el resultado anterior entre 7. 
+                    var op6 = Math.trunc(op5 / 7)
+                    //Restar el número del paso 5 con el número del paso 6 por 7. 
+                    var op7 = Math.trunc(op5 - (op6 * 7))
+
+                    //Comprobamos el resultado
+                    var resultado ="";
+                    switch (op7) {
+                    case 0: resultado = "Sabado"; break;
+                    case 1: resultado = "Domingo"; break;
+                    case 2: resultado = "Lunes"; break;
+                    case 3: resultado = "Martes"; break;
+                    case 4: resultado = "Miercoes"; break;
+                    case 5: resultado = "Jueves"; break;
+                    case 6: resultado = "Viernes"; break;
+                    }
+                    //Lo escribimos
+                    $("#resultado").text(resultado);
+                })
+            })
+
+        </script>
+
+    </body>
+    </html>
+</body>
+</html>
