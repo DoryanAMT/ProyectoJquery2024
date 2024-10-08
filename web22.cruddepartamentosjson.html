@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Crud departamentos json</h1>
+    <label>Departamento</label>
+    <input type="text" id="cajanumero"><br/>
+    <label>Nombre</label>
+    <input type="text" id="cajanombre"><br/>
+    <label>Localidad</label>
+    <input type="text" id="cajalocalidad"><br/>
+
+    <button id="botoninsertar">Insertar</button>
+    <button id="botonupdate">Modificar</button>
+    <button id="botoneliminar">Eliminar</button>
+    <hr/>
+
+    <table id="tabladepartamentos" style="border:solid,black,1px">
+        <thead>
+            <tr>
+                <th>Id Departamentos</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+
+        var url = "https://apicruddepartamentoscore.azurewebsites.net/"
+
+        $(document).ready(function(){
+            loadDepartamentos();
+
+            $("#botoninsertar").click(function(){
+                var numero = parseInt($("#cajanumero").val()) ;
+                var nombre = $("#cajanombre").val();
+                var localidad = $("#cajalocalidad").val();
+                //NECESITAMOS CREAR UN OBJETO QUE CONTENGA
+                //EL MISMO NOMBRE DE PROPIEDADES DEL OBJETO JSON
+                //QUE RECIBIRA EL SERVICIO API
+                var departamento = new Object();
+                departamento.numero = numero;
+                departamento.nombre = nombre;
+                departamento.localidad = localidad;
+                //CONVERTIMOS EL OBJETO A FORMATO JSON
+                var dataJSON = JSON.stringify(departamento);
+                //hay que verficar que los datos son del mismo tipo
+                //que pide el json en este caso pide un entero en numero
+                //y el resto son stings
+                console.log(dataJSON);
+                var request = "api/departamentos";
+                //utilizamos ajax para la peticion
+                $.ajax({
+
+                    url: url+ request,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: dataJSON,
+                    success: function(){
+                        console.log("Departamento insertado");
+                        loadDepartamentos();
+                    }
+                })
+
+            });
+
+            //===============================================================
+
+            $("#botonupdate").click(function(){
+                var numero = parseInt($("#cajanumero").val()) ;
+                var nombre = $("#cajanombre").val();
+                var localidad = $("#cajalocalidad").val();
+
+                var departamento = new Object();
+                departamento.numero = numero;
+                departamento.nombre = nombre;
+                departamento.localidad = localidad;
+
+                var dataJSON = JSON.stringify(departamento);
+                var request = "api/departamentos";
+                $.ajax({
+                    url: url + request,
+                    type: "PUT",
+                    contentType : "application/json",
+                    data: dataJSON,
+                    success : function(){
+                        console.log("departamento modificado");
+                        loadDepartamentos();
+                    }
+                })
+
+            })
+
+            //===============================================================
+
+            $("#botoneliminar").click(function(){
+                var id = parseInt($("#cajanumero").val());
+                var request = "api/departamentos/"+id;
+
+                $.ajax({
+                    url : url + request,
+                    type: "DELETE",
+                    success: function(){
+                        console.log("departamento eliminado");
+                        loadDepartamentos();
+                    }
+                })
+            })
+
+        });
+
+        function loadDepartamentos(){
+            var request = "api/departamentos";
+            $.getJSON(url + request, function(data){
+                console.log("leyendo json...");
+                var html = "";
+                $.each(data, function(index, departamento){
+                    html += "<tr>";
+                    html += "<td>"+departamento.numero+"</td>";
+                    html += "<td>"+departamento.nombre+"</td>";
+                    html += "<td>"+departamento.localidad+"</td>";
+                    html += "</tr>";
+                })
+                $("#tabladepartamentos tbody").html(html);
+            })
+        }
+    </script>
+
+</body>
+</html>
